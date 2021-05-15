@@ -1,0 +1,76 @@
+database.php
+'charset' => 'utf8',
+'collation' => 'utf8_unicode_ci',
+
+web.php route error 
+
+use App\Http\Controllers\UserController;
+Route::get('/user', [UserController::class, 'index]);
+Laravel 8 has updated the route format. above route will only only for laravel 8 or higher
+if you laravel below 8 try using
+Route::get('/user', 'UserController@index');
+
+
+add to cart================
+1) create form action= = details.blade.php
+<form action="/add_to_cart" method="POST">
+
+2) create funtion = productController.php
+    function addToCart(Request $req) {eturn "Hello"; }
+
+3) make route = web.php
+ Route::post("add_to_cart", 'ProductController@addToCart');
+
+4) php artisan make:model Cart
+
+5) Give path = productController.php = use App\Cart;
+
+Remove cart===================
+1. cartlist.blade.php =  html type
+<div class="col-sm-3">
+            <a href="/removecart/{{$item->cart_id}}" class="btn btn-warning">Remove to Cart</a>
+         </div>
+
+2. route = web.php
+Route::get("removecart", 'ProductController@removeCart');
+
+3. write function =  productController.php 
+function removeCart($id)
+    {
+        Cart::destroy($id);
+        return redirect('cartlist');
+    }
+
+order table ========================
+1. php artisan make:migration create_orders_table
+
+2. database
+
+        Schema::create('orders', function (Blueprint $table) {
+            $table->id();
+            $table->integer('product_id');
+            $table->integer('user_id');
+            $table->string('status');
+            $table->string('payment_method');
+            $table->string('payment_status');
+            $table->string('address');
+            $table->timestamps();
+        });
+3.php artisan migrate
+
+
+orderplace===================
+1.  <form action="/orderplace" method="POST">
+                @csrf
+
+2.Route::post("orderplace", 'ProductController@orderPlace');
+
+3. function orderPlace(Request $req)
+4. php artisan make:model Order
+5. ProductController.php
+foreach($allCart as $cart){
+            $order= new Order;
+        }
+6. model = public $timestamps= false;
+
+2021/5/16
